@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "UICircularProgressRing",
+        "repositoryURL": "https://github.com/luispadron/UICircularProgressRing",
+        "state": {
+          "branch": "v7.0",
+          "revision": "0705b03941d20ea9d9e283e909da57857bbaf83f",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
