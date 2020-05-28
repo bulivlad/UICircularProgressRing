@@ -1,8 +1,8 @@
 //
 //  SnapshotTest.swift
-//  
 //
-//  Created by Luis on 5/28/20.
+//
+//  Created by Luis Padron on 5/28/20.
 //
 
 import SnapshotTesting

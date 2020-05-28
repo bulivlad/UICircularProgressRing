@@ -5,7 +5,7 @@ import PackageDescription
 let package = Package(
     name: "UICircularProgressRing",
     platforms: [
-        .iOS(.v13), .tvOS(.v13), .watchOS(.v2)
+        .macOS(.v10_15), .iOS(.v13), .tvOS(.v13), .watchOS(.v2)
     ],
     products: [
         .library(
