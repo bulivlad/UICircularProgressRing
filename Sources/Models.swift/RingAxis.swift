@@ -30,6 +30,7 @@ extension RingAxis {
     }
 
     /// returns the axis values for this axis in 3d space
+    // swiftlint:disable:next large_tuple
     var as3D: (x: CGFloat, y: CGFloat, z: CGFloat) {
         switch self {
         case .top:

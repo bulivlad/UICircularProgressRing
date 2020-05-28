@@ -20,7 +20,7 @@ struct RingShape: Shape {
     func path(in rect: CGRect) -> Path {
         Circle()
             .inset(by: lineWidth.float / 2)
-            .trim(to: CGFloat(min(percent, 1.0)))
+            .trim(  to: CGFloat(min(percent, 1.0)))
             .rotation(axis.angle)
             .path(in: rect)
     }
