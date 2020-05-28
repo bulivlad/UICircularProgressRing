@@ -5,6 +5,7 @@
 //  Created by Luis Padron on 5/28/20.
 //
 
+import SwiftUI
 import SnapshotTesting
 import XCTest
 
@@ -19,6 +20,21 @@ final class RingSnapshotTest: SnapshotTest {
             lineWidth: 20,
             color: .red
         )
+            .frame(width: 200, height: 200)
+
+        assertSnapshot(matching: ring, as: .image)
+    }
+
+    func test_ring_with_text() {
+        let ring = Ring(
+            percent: 0.76,
+            axis: .trailing,
+            clockwise: false,
+            lineWidth: 20,
+            color: .blue
+        ) { percent in
+            Text("\(percent * 100)%")
+        }
             .frame(width: 200, height: 200)
 
         assertSnapshot(matching: ring, as: .image)

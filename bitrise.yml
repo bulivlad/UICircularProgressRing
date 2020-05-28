@@ -27,7 +27,7 @@ workflows:
         - strict: 'yes'
         - linting_path: "$BITRISE_SOURCE_DIR"
     - script@1:
-        title: Fail on SwiftLint
+        title: Check SwiftLint
         inputs:
         - content: |-
             #!/usr/bin/env bash

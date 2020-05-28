@@ -7,7 +7,11 @@
 
 import SwiftUI
 
-struct Ring: View {
+struct Ring<Content: View>: View {
+    /// Function which is given the percent of the ring and
+    /// expects `Content` to be drawn in the center of the ring.
+    typealias ContentBuilder = (Double) -> Content
+
     /// current percentage of completion of the ring
     var percent: Double
 
@@ -23,6 +27,37 @@ struct Ring: View {
     /// the color of the ring
     let color: Color
 
+    let content: ContentBuilder
+
+    init(
+        percent: Double,
+        axis: RingAxis,
+        clockwise: Bool,
+        lineWidth: Double,
+        color: Color,
+        @ViewBuilder _ content: @escaping ContentBuilder
+    ) {
+        self.percent = percent
+        self.axis = axis
+        self.clockwise = clockwise
+        self.lineWidth = lineWidth
+        self.color = color
+        self.content = content
+    }
+
+    public var body: some View {
+        RingShape(
+            percent: percent,
+            axis: axis,
+            lineWidth: lineWidth
+        )
+            .stroke(color, lineWidth: lineWidth.float)
+            .rotation3DEffect(clockwise ? .zero : .degrees(180), axis: axis.as3D)
+            .overlay(content(percent), alignment: .center)
+    }
+}
+
+extension Ring where Content == EmptyView {
     init(
         percent: Double,
         axis: RingAxis,
@@ -35,16 +70,7 @@ struct Ring: View {
         self.clockwise = clockwise
         self.lineWidth = lineWidth
         self.color = color
-    }
-
-    public var body: some View {
-        RingShape(
-            percent: percent,
-            axis: axis,
-            lineWidth: lineWidth
-        )
-        .stroke(color, lineWidth: lineWidth.float)
-        .rotation3DEffect(clockwise ? .zero : .degrees(180), axis: axis.as3D)
+        self.content = { _ in EmptyView() }
     }
 }
 
@@ -55,15 +81,30 @@ struct Ring_Previews: PreviewProvider {
         @State var percent: Double
 
         var body: some View {
-            Ring(
-                percent: percent,
-                axis: .top,
-                clockwise: true,
-                lineWidth: 20,
-                color: .purple
-            )
-            .onAppear {
-                withAnimation(.linear(duration: 10), { self.percent = 1 })
+            Group {
+                Ring(
+                    percent: percent,
+                    axis: .top,
+                    clockwise: true,
+                    lineWidth: 20,
+                    color: .purple
+                )
+                    .onAppear {
+                        withAnimation(.linear(duration: 10), { self.percent = 1 })
+                    }
+
+                Ring(
+                    percent: percent,
+                    axis: .top,
+                    clockwise: true,
+                    lineWidth: 20,
+                    color: .purple
+                ) { percent in
+                    Text("\(percent)%")
+                }
+                    .onAppear {
+                        withAnimation(.linear(duration: 10), { self.percent = 1 })
+                    }
             }
         }
     }
