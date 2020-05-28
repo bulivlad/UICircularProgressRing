@@ -5,12 +5,18 @@ import PackageDescription
 let package = Package(
     name: "UICircularProgressRing",
     platforms: [
-        .iOS(.v10), .tvOS(.v10), .watchOS(.v2)
+        .iOS(.v13), .tvOS(.v13), .watchOS(.v2)
     ],
     products: [
         .library(
             name: "UICircularProgressRing",
             targets: ["UICircularProgressRing"]
+        )
+    ],
+    dependencies: [
+        .package(
+            url: "https://github.com/luispadron/swift-snapshot-testing.git",
+            .branch("master")
         )
     ],
     targets: [
@@ -21,8 +27,18 @@ let package = Package(
         ),
         .testTarget(
             name: "UICircularProgressRingTests",
-            dependencies: ["UICircularProgressRing"],
+            dependencies: [
+                "UICircularProgressRing"
+            ],
             path: "Tests"
+        ),
+        .testTarget(
+            name: "UICircularProgressRingSnapshoTests",
+            dependencies: [
+                "UICircularProgressRing",
+                "SnapshotTesting"
+            ],
+            path: "SnapshotTests"
         )
     ]
 )

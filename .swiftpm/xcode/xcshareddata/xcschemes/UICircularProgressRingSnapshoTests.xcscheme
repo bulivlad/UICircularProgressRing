@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A01AEA9C23D029A3009DF55C"
-               BuildableName = "UICircularProgressRingExample.app"
-               BlueprintName = "UICircularProgressRingExample"
-               ReferencedContainer = "container:UICircularProgressRingExample.xcodeproj">
+               BlueprintIdentifier = "UICircularProgressRingSnapshoTests"
+               BuildableName = "UICircularProgressRingSnapshoTests"
+               BlueprintName = "UICircularProgressRingSnapshoTests"
+               ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,20 +32,10 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "UICircularProgressRingTests"
-               BuildableName = "UICircularProgressRingTests"
-               BlueprintName = "UICircularProgressRingTests"
-               ReferencedContainer = "container:..">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "UICircularProgressRingSnapshoTests"
                BuildableName = "UICircularProgressRingSnapshoTests"
                BlueprintName = "UICircularProgressRingSnapshoTests"
-               ReferencedContainer = "container:..">
+               ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -60,16 +50,6 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A01AEA9C23D029A3009DF55C"
-            BuildableName = "UICircularProgressRingExample.app"
-            BlueprintName = "UICircularProgressRingExample"
-            ReferencedContainer = "container:UICircularProgressRingExample.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -77,16 +57,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A01AEA9C23D029A3009DF55C"
-            BuildableName = "UICircularProgressRingExample.app"
-            BlueprintName = "UICircularProgressRingExample"
-            ReferencedContainer = "container:UICircularProgressRingExample.xcodeproj">
+            BlueprintIdentifier = "UICircularProgressRingSnapshoTests"
+            BuildableName = "UICircularProgressRingSnapshoTests"
+            BlueprintName = "UICircularProgressRingSnapshoTests"
+            ReferencedContainer = "container:">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
