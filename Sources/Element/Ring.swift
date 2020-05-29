@@ -8,10 +8,6 @@
 import SwiftUI
 
 struct Ring<Content: View>: View {
-    /// Function which is given the percent of the ring and
-    /// expects `Content` to be drawn in the center of the ring.
-    typealias ContentBuilder = (Double) -> Content
-
     /// current percentage of completion of the ring
     var percent: Double
 
@@ -27,7 +23,9 @@ struct Ring<Content: View>: View {
     /// the color of the ring
     let color: Color
 
-    let content: ContentBuilder
+    /// Function which is given the percent of the ring and
+     /// expects `Content` to be drawn in the center of the ring.
+    let content: (Double) -> Content
 
     init(
         percent: Double,
@@ -35,7 +33,7 @@ struct Ring<Content: View>: View {
         clockwise: Bool,
         lineWidth: Double,
         color: Color,
-        @ViewBuilder _ content: @escaping ContentBuilder
+        @ViewBuilder _ content: @escaping (Double) -> Content
     ) {
         self.percent = percent
         self.axis = axis
@@ -65,12 +63,15 @@ extension Ring where Content == EmptyView {
         lineWidth: Double,
         color: Color
     ) {
-        self.percent = percent
-        self.axis = axis
-        self.clockwise = clockwise
-        self.lineWidth = lineWidth
-        self.color = color
-        self.content = { _ in EmptyView() }
+        self.init(
+            percent: percent,
+            axis: axis,
+            clockwise: clockwise,
+            lineWidth: lineWidth,
+            color: color
+        ) { _ in
+            EmptyView()
+        }
     }
 }
 

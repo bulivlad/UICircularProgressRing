@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum RingAxis {
+public enum RingAxis {
     case top
     case bottom
     case leading
