@@ -14,11 +14,11 @@ class SnapshotTest: XCTestCase {
 
         //
         // This defines whether snapshot test recording
-        // runs or not. i.e. whether we generate new images or not.
-        // change this to true, run the tests, and change back to false
-        // when a change to the UI was intended.
-        //
+        #if SNAPSHOT_GENERATION
+        record = true
+        #else
         record = false
+        #endif
         //
         //
     }

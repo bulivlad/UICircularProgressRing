@@ -33,7 +33,7 @@ let package = Package(
             path: "Tests"
         ),
         .testTarget(
-            name: "UICircularProgressRingSnapshoTests",
+            name: "UICircularProgressRingSnapshotTests",
             dependencies: [
                 "UICircularProgressRing",
                 "SnapshotTesting"

@@ -18,7 +18,7 @@ final class RingSnapshotTest: SnapshotTest {
             axis: .top,
             clockwise: true,
             lineWidth: 20,
-            color: .red
+            color: .blue
         )
             .frame(width: 200, height: 200)
 
