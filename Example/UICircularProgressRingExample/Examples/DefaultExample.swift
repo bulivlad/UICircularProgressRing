@@ -27,10 +27,9 @@ struct DefaultExample: View {
 
     var body: some View {
         VStack {
-            ProgressRing(progress: progressPublisher)
+            ProgressRing(progress: $progress)
+                .animation(.easeInOut(duration: 5))
                 .padding(32)
-
-            Spacer()
 
             Button(action: { self.onDidTapSubject.send(()) }) {
                 buttonLabel
@@ -40,6 +39,9 @@ struct DefaultExample: View {
                 .background(Color.blue)
                 .cornerRadius(8)
                 .offset(y: -32)
+        }
+        .onReceive(progressPublisher) { progress in
+            self.progress = progress
         }
     }
 

@@ -10,19 +10,7 @@ import SwiftUI
 /// # ProgressRing
 ///
 public struct ProgressRing<Label, IndeterminateView> where Label: View, IndeterminateView: View {
-    @State private var _progress: RingProgress = .percent(0)
-
-    private let onDidAppearSubject = PassthroughSubject<Void, Never>()
-    private var onDidAppearPublisher: AnyPublisher<Void, Never> {
-        onDidAppearSubject.eraseToAnyPublisher()
-    }
-
-    private let progress: AnyPublisher<RingProgress, Never>
-    private var progressPublisher: AnyPublisher<RingProgress, Never> {
-        onDidAppearPublisher
-            .flatMap { self.progress }
-            .eraseToAnyPublisher()
-    }
+    @Binding private var progress: RingProgress
 
     let axis: RingAxis
     let clockwise: Bool
@@ -35,20 +23,32 @@ public struct ProgressRing<Label, IndeterminateView> where Label: View, Indeterm
     private let indeterminateView: () -> IndeterminateView
     private let label: (Double) -> Label
 
+    /// Creates a `ProgressRing`.
+    ///
+    /// - Parameters:
+    ///   - progress: A `Binding` to some `RingProgress` which determines the state of the progress ring.
+    ///   - axis: A `RingAxis` which determines the starting axis for which to draw.
+    ///   - clockwise: Whether the ring is drawn in a clock wise manner or not.
+    ///   - innerRingColor: The `Color` of the inner progress ring.
+    ///   - outerRingColor: The `Color` of the outer progress ring.
+    ///   - innerRingWidth: The width of the inner progress ring.
+    ///   - outerRingWidth: The width of the outer progress ring.
+    ///   - innerRingPadding: The padding for the inner progress ring.
+    ///   - label: A closure which constructs the `Label` for the progress ring.
+    ///   - indeterminateView: A closure which constructs a view that is used when progress `isIndeterminate`.
     public init (
-        progress: AnyPublisher<RingProgress, Never>,
-        animation: Animation = .default,
-        axis: RingAxis = .top,
-        clockwise: Bool = true,
-        innerRingColor: Color = .blue,
-        outerRingColor: Color = .red,
-        innerRingWidth: Double = 16,
-        outerRingWidth: Double = 32,
-        innerRingPadding: Double = 16 / 2,
+        progress: Binding<RingProgress>,
+        axis: RingAxis = ProgressRingDefaults.axis,
+        clockwise: Bool = ProgressRingDefaults.clockwise,
+        innerRingColor: Color = ProgressRingDefaults.innerRingColor,
+        outerRingColor: Color = ProgressRingDefaults.outerRingColor,
+        innerRingWidth: Double = ProgressRingDefaults.innerRingWidth,
+        outerRingWidth: Double = ProgressRingDefaults.outerRingWidth,
+        innerRingPadding: Double = ProgressRingDefaults.innerRingPadding,
         @ViewBuilder _ label: @escaping (Double) -> Label,
         @ViewBuilder _ indeterminateView: @escaping () -> IndeterminateView
     ) {
-        self.progress = progress
+        self._progress = progress
         self.axis = axis
         self.clockwise = clockwise
         self.innerRingWidth = innerRingWidth
@@ -61,21 +61,48 @@ public struct ProgressRing<Label, IndeterminateView> where Label: View, Indeterm
     }
 }
 
+// MAR: - Defaults
+
+/// Defaults for the `ProgressRing` initializers.
+public enum ProgressRingDefaults {
+    public static let axis: RingAxis = .top
+    public static let clockwise: Bool = true
+    public static let innerRingColor: Color = .blue
+    public static let outerRingColor: Color = .gray
+    public static let innerRingWidth: Double = 16
+    public static let outerRingWidth: Double = 32
+    public static let innerRingPadding: Double = 16 / 2
+}
+
 // MARK: - Init
 
 public extension ProgressRing where IndeterminateView == IndeterminateRing {
+
+    /// Creates a `ProgressRing`.
+    /// Uses a default `IndeterminateView`.
+    ///
+    /// - Parameters:
+    ///   - progress: A `Binding` to some `RingProgress` which determines the state of the progress ring.
+    ///   - axis: A `RingAxis` which determines the starting axis for which to draw.
+    ///   - clockwise: Whether the ring is drawn in a clock wise manner or not.
+    ///   - innerRingColor: The `Color` of the inner progress ring.
+    ///   - outerRingColor: The `Color` of the outer progress ring.
+    ///   - innerRingWidth: The width of the inner progress ring.
+    ///   - outerRingWidth: The width of the outer progress ring.
+    ///   - innerRingPadding: The padding for the inner progress ring.
+    ///   - label: A closure which constructs the `Label` for the progress ring.
     init(
-        progress: AnyPublisher<RingProgress, Never>,
-        axis: RingAxis = .top,
-        clockwise: Bool = true,
-        innerRingColor: Color = .blue,
-        outerRingColor: Color = .red,
-        innerRingWidth: Double = 16,
-        outerRingWidth: Double = 32,
-        innerRingPadding: Double = 16 / 2,
+        progress: Binding<RingProgress>,
+        axis: RingAxis = ProgressRingDefaults.axis,
+        clockwise: Bool = ProgressRingDefaults.clockwise,
+        innerRingColor: Color = ProgressRingDefaults.innerRingColor,
+        outerRingColor: Color = ProgressRingDefaults.outerRingColor,
+        innerRingWidth: Double = ProgressRingDefaults.innerRingWidth,
+        outerRingWidth: Double = ProgressRingDefaults.outerRingWidth,
+        innerRingPadding: Double = ProgressRingDefaults.innerRingPadding,
         @ViewBuilder _ label: @escaping (Double) -> Label
     ) {
-        self.progress = progress
+        self._progress = progress
         self.axis = axis
         self.clockwise = clockwise
         self.innerRingWidth = innerRingWidth
@@ -88,18 +115,31 @@ public extension ProgressRing where IndeterminateView == IndeterminateRing {
     }
 }
 
-public extension ProgressRing where Label == Text, IndeterminateView == IndeterminateRing {
+public extension ProgressRing where Label == PercentFormattedText, IndeterminateView == IndeterminateRing {
+
+    /// Creates a `ProgressRing`.
+    /// Uses a default `Label` and `IndeterminateView`.
+    ///
+    /// - Parameters:
+    ///   - progress: A `Binding` to some `RingProgress` which determines the state of the progress ring.
+    ///   - axis: A `RingAxis` which determines the starting axis for which to draw.
+    ///   - clockwise: Whether the ring is drawn in a clock wise manner or not.
+    ///   - innerRingColor: The `Color` of the inner progress ring.
+    ///   - outerRingColor: The `Color` of the outer progress ring.
+    ///   - innerRingWidth: The width of the inner progress ring.
+    ///   - outerRingWidth: The width of the outer progress ring.
+    ///   - innerRingPadding: The padding for the inner progress ring.
     init(
-        progress: AnyPublisher<RingProgress, Never>,
-        axis: RingAxis = .top,
-        clockwise: Bool = true,
-        innerRingColor: Color = .blue,
-        outerRingColor: Color = .red,
-        innerRingWidth: Double = 16,
-        outerRingWidth: Double = 32,
-        innerRingPadding: Double = 16 / 2
+        progress: Binding<RingProgress>,
+        axis: RingAxis = ProgressRingDefaults.axis,
+        clockwise: Bool = ProgressRingDefaults.clockwise,
+        innerRingColor: Color = ProgressRingDefaults.innerRingColor,
+        outerRingColor: Color = ProgressRingDefaults.outerRingColor,
+        innerRingWidth: Double = ProgressRingDefaults.innerRingWidth,
+        outerRingWidth: Double = ProgressRingDefaults.outerRingWidth,
+        innerRingPadding: Double = ProgressRingDefaults.innerRingPadding
     ) {
-        self.progress = progress
+        self._progress = progress
         self.axis = axis
         self.clockwise = clockwise
         self.innerRingWidth = innerRingWidth
@@ -108,13 +148,7 @@ public extension ProgressRing where Label == Text, IndeterminateView == Indeterm
         self.outerRingColor = outerRingColor
         self.innerRingPadding = innerRingPadding
         self.indeterminateView = { IndeterminateRing() }
-        self.label = { percent -> Text in
-            let numberFormatter = NumberFormatter()
-            numberFormatter.numberStyle = .percent
-
-            return Text(numberFormatter.string(from: .init(floatLiteral: percent)) ?? "NaN")
-                .font(.system(.largeTitle))
-        }
+        self.label = { PercentFormattedText(percent: $0) }
     }
 }
 
@@ -122,7 +156,7 @@ extension ProgressRing: View {
 
     public var body: some View {
         Group {
-            if _progress.isIndeterminate {
+            if progress.isIndeterminate {
                 indeterminateView()
             } else {
                 ZStack(alignment: .center) {
@@ -135,30 +169,20 @@ extension ProgressRing: View {
                     )
 
                     Ring(
-                        percent: _progress.asDouble ?? 0.0,
+                        percent: progress.asDouble ?? 0.0,
                         axis: axis,
                         clockwise: clockwise,
                         lineWidth: innerRingWidth,
                         color: innerRingColor
                     )
                     .modifier(
-                        AnimatableProgressTextModifier(
-                            percent: _progress.asDouble ?? 0.0,
+                        AnimatablePercentTextModifier(
+                            percent: progress.asDouble ?? 0.0,
                             label: label
                         )
                     )
                     .padding(CGFloat(innerRingPadding))
-                    .visible(!_progress.isIndeterminate)
                 }
-            }
-        }
-        .transition(.identity)
-        .onAppear() {
-            self.onDidAppearSubject.send(())
-        }
-        .onReceive(progressPublisher) { progress in
-            withAnimation(.linear(duration: 2)) {
-                self._progress = progress
             }
         }
     }
@@ -167,7 +191,7 @@ extension ProgressRing: View {
 struct ProgressRing_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            ProgressRing(progress: Just(RingProgress.percent(0.5)).eraseToAnyPublisher())
+            ProgressRing(progress: .constant(.percent(0.5)))
         }
     }
 }

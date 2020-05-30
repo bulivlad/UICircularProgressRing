@@ -133,3 +133,4 @@ iOSInjectionProject/
 #
 .bundle
 .bitrise.secrets.yml
+*.swiftpm/*
