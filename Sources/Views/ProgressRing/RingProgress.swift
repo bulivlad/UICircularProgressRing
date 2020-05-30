@@ -19,10 +19,12 @@ public enum RingProgress {
     case indeterminate
 }
 
+extension RingProgress: Equatable { }
+
 // MARK: Percentage + External
 
 public extension RingProgress {
-    /// - returns: Whether the progress value is determinate or not.
+    /// Whether the progress value is determinate or not, i.e. not a percentage.
     var isIndeterminate: Bool {
         switch self {
         case .percent:
@@ -32,7 +34,7 @@ public extension RingProgress {
         }
     }
 
-    /// - returns: Attempts to convert to double, if `isIndeterminate == true` this returns `nil`.
+    /// Attempts to convert to double, if `isIndeterminate` is `true` this returns `nil`.
     var asDouble: Double? {
         switch self {
         case let .percent(val):
