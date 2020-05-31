@@ -9,20 +9,22 @@
 import UICircularProgressRing
 import SwiftUI
 
-enum RingType: String {
+enum RingExamples: String {
     case `default`
     case indeterminate
+    case customization
 }
 
 struct RingList: View {
-    let ringTypes: [RingType] = [
+    let ringExamples: [RingExamples] = [
         .default,
-        .indeterminate
+        .indeterminate,
+        .customization
     ]
 
     var body: some View {
         NavigationView {
-            List(ringTypes, id: \.self) { ringType in
+            List(ringExamples, id: \.self) { ringType in
                 ExampleRingRow(type: ringType)
             }
             .navigationBarTitle("Examples")
@@ -37,7 +39,7 @@ struct RingList_Previews: PreviewProvider {
 }
 
 private struct ExampleRingRow: View {
-    let type: RingType
+    let type: RingExamples
     @State private var isShown = false
 
     var body: some View {
@@ -49,13 +51,15 @@ private struct ExampleRingRow: View {
     }
 }
 
-private extension RingType {
+private extension RingExamples {
     var title: String {
         switch self {
         case .default:
             return "Basic Ring"
         case .indeterminate:
             return "Indeterminate Ring"
+        case .customization:
+            return "Customization Example"
         }
     }
 
@@ -64,7 +68,9 @@ private extension RingType {
         case .default:
             return AnyView(DefaultExample())
         case .indeterminate:
-            return AnyView(EmptyView())
+            return AnyView(IndeterminateExample())
+        case .customization:
+            return AnyView(ProgressRingCustomizationExample())
         }
     }
 }

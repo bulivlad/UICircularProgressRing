@@ -29,7 +29,7 @@ lane :run_snapshot do
 	create_project
 
 	UI.message "Removing old snapshots"
-	sh "rm -rf SnapshotTests/__Snapshots__"
+	sh "rm -rf ../SnapshotTests/__Snapshots__/"
 
 	UI.message "Generating snapshots"
 	scan(

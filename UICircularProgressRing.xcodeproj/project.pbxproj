@@ -765,7 +765,7 @@
       };
       "OBJ_24" = {
          isa = "PBXFileReference";
-         path = "ProgressRingTests.swift";
+         path = "ProgressRingSnapshotTests.swift";
          sourceTree = "<group>";
       };
       "OBJ_25" = {
@@ -1176,10 +1176,10 @@
       "OBJ_70" = {
          isa = "PBXGroup";
          children = (
-            "UICircularProgressRing::UICircularProgressRing::Product",
             "UICircularProgressRing::UICircularProgressRingTests::Product",
             "SnapshotTesting::SnapshotTesting::Product",
-            "UICircularProgressRing::UICircularProgressRingSnapshotTests::Product"
+            "UICircularProgressRing::UICircularProgressRingSnapshotTests::Product",
+            "UICircularProgressRing::UICircularProgressRing::Product"
          );
          name = "Products";
          path = "";

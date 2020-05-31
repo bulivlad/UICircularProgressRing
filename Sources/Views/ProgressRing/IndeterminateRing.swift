@@ -9,32 +9,36 @@ import SwiftUI
 /// An `IndeterminateRing` is a `View` which displays
 /// an animated ring to represent some long running task.
 public struct IndeterminateRing: View {
-    @State private var animationAngle = 0.0
+    @State public private(set) var isAnimating: Bool = false
+
+    let percent: Double
+    let animation: Animation
+
+    public init(
+        percent: Double = 0.0,
+        animation: Animation = Animation.easeInOut.repeatForever(autoreverses: false)
+    ) {
+        self.percent = percent
+        self.animation = animation
+    }
 
     public var body: some View {
         ZStack {
-            ForEach(0..<3) { index in
-                Ring(
-                    percent: 0.125,
-                    axis: index.axis,
-                    clockwise: true,
-                    lineWidth: 20,
-                    color: .red
-                )
-                .rotationEffect(.degrees(Double(45 * index)))
-                .animation(.linear)
+            Ring(
+                percent: percent,
+                axis: .top,
+                clockwise: true,
+                lineWidth: 20,
+                color: .blue
+            )
+            .rotationEffect(.degrees(isAnimating ? 360 : 0))
+            .animation(animation)
+        }
+        .onAppear {
+            withAnimation {
+                self.isAnimating = true
             }
         }
-        .rotationEffect(.degrees(animationAngle))
-        .onAppear {
-            self.animationAngle += 360
-        }
-    }
-}
-
-struct IndeterminateRing_Previews: PreviewProvider {
-    static var previews: some View {
-        IndeterminateRing()
     }
 }
 
@@ -52,5 +56,12 @@ private extension Int {
         default:
             return .top
         }
+    }
+}
+
+struct IndeterminateRing_Previews: PreviewProvider {
+    static var previews: some View {
+        IndeterminateRing(percent: 0.76)
+            .padding()
     }
 }

@@ -7,14 +7,22 @@
 
 import SwiftUI
 
+/// # RingAxis
+///
+/// Represents the possible axis positions
+/// on which we can draw a ring.
 public enum RingAxis {
+    /// Top of the screen.
     case top
+    /// Bottom of the screen.
     case bottom
+    /// Leading edge of the screen.
     case leading
+    /// Trailing edge of the screen.
     case trailing
 }
 
-extension RingAxis {
+public extension RingAxis {
     /// returns the `Angle` in regards to apples weird flipped coordinate system
     var angle: Angle {
         switch self {

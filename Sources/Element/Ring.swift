@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+public enum RingColor {
+    case color(Color)
+    case gradient(AngularGradient)
+}
+
 struct Ring<Content: View>: View {
     /// current percentage of completion of the ring
     var percent: Double
@@ -21,7 +26,7 @@ struct Ring<Content: View>: View {
     let lineWidth: Double
 
     /// the color of the ring
-    let color: Color
+    let color: RingColor
 
     /// Function which is given the percent of the ring and
      /// expects `Content` to be drawn in the center of the ring.
@@ -33,6 +38,24 @@ struct Ring<Content: View>: View {
         clockwise: Bool,
         lineWidth: Double,
         color: Color,
+        @ViewBuilder _ content: @escaping (Double) -> Content
+    ) {
+        self.init(
+            percent: percent,
+            axis: axis,
+            clockwise: clockwise,
+            lineWidth: lineWidth,
+            color: .color(color),
+            content
+        )
+    }
+
+    init(
+        percent: Double,
+        axis: RingAxis,
+        clockwise: Bool,
+        lineWidth: Double,
+        color: RingColor,
         @ViewBuilder _ content: @escaping (Double) -> Content
     ) {
         self.percent = percent
@@ -49,13 +72,14 @@ struct Ring<Content: View>: View {
             axis: axis,
             lineWidth: lineWidth
         )
-            .stroke(color, lineWidth: lineWidth.float)
+            .stroked(with: color, lineWidth: lineWidth)
             .rotation3DEffect(clockwise ? .zero : .degrees(180), axis: axis.as3D)
             .overlay(content(percent), alignment: .center)
     }
 }
 
 extension Ring where Content == EmptyView {
+    /// Default init which returns a ring with no label.
     init(
         percent: Double,
         axis: RingAxis,
@@ -71,6 +95,38 @@ extension Ring where Content == EmptyView {
             color: color
         ) { _ in
             EmptyView()
+        }
+    }
+
+    /// Default init which returns a ring with no label.
+    init(
+        percent: Double,
+        axis: RingAxis,
+        clockwise: Bool,
+        lineWidth: Double,
+        color: RingColor
+    ) {
+        self.init(
+            percent: percent,
+            axis: axis,
+            clockwise: clockwise,
+            lineWidth: lineWidth,
+            color: color
+        ) { _ in
+            EmptyView()
+        }
+    }
+}
+
+// MARK: - Extensions
+
+private extension Shape {
+    func stroked(with ringColor: RingColor, lineWidth: Double) -> AnyView {
+        switch ringColor {
+        case let .color(color):
+            return AnyView(self.stroke(color, lineWidth: lineWidth.float))
+        case let .gradient(gradient):
+            return AnyView(self.stroke(gradient, lineWidth: lineWidth.float))
         }
     }
 }
@@ -106,6 +162,23 @@ struct Ring_Previews: PreviewProvider {
                     .onAppear {
                         withAnimation(.linear(duration: 10), { self.percent = 1 })
                     }
+
+                Ring(
+                    percent: percent,
+                    axis: .top,
+                    clockwise: true,
+                    lineWidth: 20,
+                    color: .gradient(
+                        AngularGradient(
+                            gradient: .init(colors: [.red, .green]),
+                            center: .center,
+                            angle: RingAxis.top.angle
+                        )
+                    )
+                )
+                .onAppear {
+                    withAnimation(.linear(duration: 10), { self.percent = 1 })
+                }
             }
         }
     }

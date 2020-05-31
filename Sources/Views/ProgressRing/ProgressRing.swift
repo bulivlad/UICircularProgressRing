@@ -16,11 +16,11 @@ public struct ProgressRing<Label, IndeterminateView> where Label: View, Indeterm
     let clockwise: Bool
     let innerRingWidth: Double
     let outerRingWidth: Double
-    let innerRingColor: Color
-    let outerRingColor: Color
+    let innerRingColor: RingColor
+    let outerRingColor: RingColor
     let innerRingPadding: Double
 
-    private let indeterminateView: () -> IndeterminateView
+    private let indeterminateView: (Double) -> IndeterminateView
     private let label: (Double) -> Label
 
     /// Creates a `ProgressRing`.
@@ -40,13 +40,13 @@ public struct ProgressRing<Label, IndeterminateView> where Label: View, Indeterm
         progress: Binding<RingProgress>,
         axis: RingAxis = ProgressRingDefaults.axis,
         clockwise: Bool = ProgressRingDefaults.clockwise,
-        innerRingColor: Color = ProgressRingDefaults.innerRingColor,
-        outerRingColor: Color = ProgressRingDefaults.outerRingColor,
+        innerRingColor: RingColor = ProgressRingDefaults.innerRingColor,
+        outerRingColor: RingColor = ProgressRingDefaults.outerRingColor,
         innerRingWidth: Double = ProgressRingDefaults.innerRingWidth,
         outerRingWidth: Double = ProgressRingDefaults.outerRingWidth,
         innerRingPadding: Double = ProgressRingDefaults.innerRingPadding,
         @ViewBuilder _ label: @escaping (Double) -> Label,
-        @ViewBuilder _ indeterminateView: @escaping () -> IndeterminateView
+        @ViewBuilder _ indeterminateView: @escaping (Double) -> IndeterminateView
     ) {
         self._progress = progress
         self.axis = axis
@@ -67,8 +67,8 @@ public struct ProgressRing<Label, IndeterminateView> where Label: View, Indeterm
 public enum ProgressRingDefaults {
     public static let axis: RingAxis = .top
     public static let clockwise: Bool = true
-    public static let innerRingColor: Color = .blue
-    public static let outerRingColor: Color = .gray
+    public static let innerRingColor: RingColor = .color(.blue)
+    public static let outerRingColor: RingColor = .color(.gray)
     public static let innerRingWidth: Double = 16
     public static let outerRingWidth: Double = 32
     public static let innerRingPadding: Double = 16 / 2
@@ -95,23 +95,25 @@ public extension ProgressRing where IndeterminateView == IndeterminateRing {
         progress: Binding<RingProgress>,
         axis: RingAxis = ProgressRingDefaults.axis,
         clockwise: Bool = ProgressRingDefaults.clockwise,
-        innerRingColor: Color = ProgressRingDefaults.innerRingColor,
-        outerRingColor: Color = ProgressRingDefaults.outerRingColor,
+        innerRingColor: RingColor = ProgressRingDefaults.innerRingColor,
+        outerRingColor: RingColor = ProgressRingDefaults.outerRingColor,
         innerRingWidth: Double = ProgressRingDefaults.innerRingWidth,
         outerRingWidth: Double = ProgressRingDefaults.outerRingWidth,
         innerRingPadding: Double = ProgressRingDefaults.innerRingPadding,
         @ViewBuilder _ label: @escaping (Double) -> Label
     ) {
-        self._progress = progress
-        self.axis = axis
-        self.clockwise = clockwise
-        self.innerRingWidth = innerRingWidth
-        self.outerRingWidth = outerRingWidth
-        self.innerRingColor = innerRingColor
-        self.outerRingColor = outerRingColor
-        self.innerRingPadding = innerRingPadding
-        self.indeterminateView = { IndeterminateRing() }
-        self.label = label
+        self.init(
+            progress: progress,
+            axis: axis,
+            clockwise: clockwise,
+            innerRingColor: innerRingColor,
+            outerRingColor: outerRingColor,
+            innerRingWidth: innerRingWidth,
+            outerRingWidth: outerRingWidth,
+            innerRingPadding: innerRingPadding,
+            label,
+            { IndeterminateRing(percent: $0) }
+        )
     }
 }
 
@@ -133,22 +135,24 @@ public extension ProgressRing where Label == PercentFormattedText, Indeterminate
         progress: Binding<RingProgress>,
         axis: RingAxis = ProgressRingDefaults.axis,
         clockwise: Bool = ProgressRingDefaults.clockwise,
-        innerRingColor: Color = ProgressRingDefaults.innerRingColor,
-        outerRingColor: Color = ProgressRingDefaults.outerRingColor,
+        innerRingColor: RingColor = ProgressRingDefaults.innerRingColor,
+        outerRingColor: RingColor = ProgressRingDefaults.outerRingColor,
         innerRingWidth: Double = ProgressRingDefaults.innerRingWidth,
         outerRingWidth: Double = ProgressRingDefaults.outerRingWidth,
         innerRingPadding: Double = ProgressRingDefaults.innerRingPadding
     ) {
-        self._progress = progress
-        self.axis = axis
-        self.clockwise = clockwise
-        self.innerRingWidth = innerRingWidth
-        self.outerRingWidth = outerRingWidth
-        self.innerRingColor = innerRingColor
-        self.outerRingColor = outerRingColor
-        self.innerRingPadding = innerRingPadding
-        self.indeterminateView = { IndeterminateRing() }
-        self.label = { PercentFormattedText(percent: $0) }
+        self.init(
+            progress: progress,
+            axis: axis,
+            clockwise: clockwise,
+            innerRingColor: innerRingColor,
+            outerRingColor: outerRingColor,
+            innerRingWidth: innerRingWidth,
+            outerRingWidth: outerRingWidth,
+            innerRingPadding: innerRingPadding,
+            { PercentFormattedText(percent: $0) },
+            { IndeterminateRing(percent: $0) }
+        )
     }
 }
 
@@ -157,7 +161,7 @@ extension ProgressRing: View {
     public var body: some View {
         Group {
             if progress.isIndeterminate {
-                indeterminateView()
+                indeterminateView(0.5)
             } else {
                 ZStack(alignment: .center) {
                     Ring(
@@ -185,6 +189,7 @@ extension ProgressRing: View {
                 }
             }
         }
+        .transition(.opacity)
     }
 }
 
