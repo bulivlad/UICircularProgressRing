@@ -22,7 +22,7 @@ public enum RingAxis {
     case trailing
 }
 
-public extension RingAxis {
+extension RingAxis {
     /// returns the `Angle` in regards to apples weird flipped coordinate system
     var angle: Angle {
         switch self {

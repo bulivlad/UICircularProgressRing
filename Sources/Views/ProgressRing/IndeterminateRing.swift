@@ -28,8 +28,8 @@ public struct IndeterminateRing: View {
                 percent: percent,
                 axis: .top,
                 clockwise: true,
-                lineWidth: 20,
-                color: .blue
+                color: .color(.blue),
+                strokeStyle: .init(lineWidth: 20)
             )
             .rotationEffect(.degrees(isAnimating ? 360 : 0))
             .animation(animation)

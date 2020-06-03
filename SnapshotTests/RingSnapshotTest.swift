@@ -12,13 +12,13 @@ import XCTest
 @testable import UICircularProgressRing
 
 final class RingSnapshotTest: SnapshotTest {
-    func test_ring_default() {
+    func test_ring_noText() {
         let ring = Ring(
             percent: 0.50,
             axis: .top,
             clockwise: true,
-            lineWidth: 20,
-            color: .blue
+            color: .color(.blue),
+            strokeStyle: .init(lineWidth: 20)
         )
             .frame(width: 200, height: 200)
 
@@ -30,8 +30,8 @@ final class RingSnapshotTest: SnapshotTest {
             percent: 0.76,
             axis: .top,
             clockwise: true,
-            lineWidth: 20,
-            color: .blue
+            color: .color(.blue),
+            strokeStyle: .init(lineWidth: 20)
         ) { percent in
             Text("\(percent * 100)%")
         }
@@ -48,8 +48,8 @@ final class RingSnapshotTest: SnapshotTest {
                     percent: 0.5,
                     axis: axis,
                     clockwise: true,
-                    lineWidth: 20,
-                    color: .blue
+                    color: .color(.blue),
+                    strokeStyle: .init(lineWidth: 20)
                 )
                 .frame(width: 200, height: 200)
             }
@@ -66,8 +66,8 @@ final class RingSnapshotTest: SnapshotTest {
                     percent: 0.5,
                     axis: .top,
                     clockwise: clockwise,
-                    lineWidth: 20,
-                    color: .blue
+                    color: .color(.blue),
+                    strokeStyle: .init(lineWidth: 20)
                 )
                 .frame(width: 200, height: 200)
             }
@@ -77,24 +77,6 @@ final class RingSnapshotTest: SnapshotTest {
         assertSnapshot(matching: sut, as: .image)
     }
 
-    func test_ring_lineWidth() {
-         let sut = Group {
-            ForEach([20.0, 10.0], id: \.self) { lineWidth in
-                 Ring(
-                    percent: 0.5,
-                     axis: .top,
-                     clockwise: true,
-                     lineWidth: lineWidth,
-                     color: .blue
-                 )
-                .frame(width: 200, height: 200)
-             }
-         }
-
-
-         assertSnapshot(matching: sut, as: .image)
-     }
-
     func test_ring_color() {
          let sut = Group {
             ForEach([Color.blue, Color.red], id: \.self) { color in
@@ -102,8 +84,8 @@ final class RingSnapshotTest: SnapshotTest {
                      percent: 0.5,
                      axis: .top,
                      clockwise: true,
-                     lineWidth: 20,
-                     color: color
+                     color: .color(color),
+                     strokeStyle: .init(lineWidth: 20)
                  )
                 .frame(width: 200, height: 200)
              }
@@ -112,4 +94,17 @@ final class RingSnapshotTest: SnapshotTest {
 
          assertSnapshot(matching: sut, as: .image)
      }
+
+    func test_ring_strokeStyle() {
+        let sut = Ring(
+            percent: 0.5,
+            axis: .top,
+            clockwise: true,
+            color: .color(.blue),
+            strokeStyle: .init(lineWidth: 20, lineCap: .round, lineJoin: .round)
+        )
+        .frame(width: 200, height: 200)
+
+        assertSnapshot(matching: sut, as: .image)
+    }
 }

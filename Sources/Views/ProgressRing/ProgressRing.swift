@@ -14,11 +14,7 @@ public struct ProgressRing<Label, IndeterminateView> where Label: View, Indeterm
 
     let axis: RingAxis
     let clockwise: Bool
-    let innerRingWidth: Double
-    let outerRingWidth: Double
-    let innerRingColor: RingColor
-    let outerRingColor: RingColor
-    let innerRingPadding: Double
+    let style: ProgressRingStyle
 
     private let indeterminateView: (Double) -> IndeterminateView
     private let label: (Double) -> Label
@@ -29,49 +25,24 @@ public struct ProgressRing<Label, IndeterminateView> where Label: View, Indeterm
     ///   - progress: A `Binding` to some `RingProgress` which determines the state of the progress ring.
     ///   - axis: A `RingAxis` which determines the starting axis for which to draw.
     ///   - clockwise: Whether the ring is drawn in a clock wise manner or not.
-    ///   - innerRingColor: The `Color` of the inner progress ring.
-    ///   - outerRingColor: The `Color` of the outer progress ring.
-    ///   - innerRingWidth: The width of the inner progress ring.
-    ///   - outerRingWidth: The width of the outer progress ring.
-    ///   - innerRingPadding: The padding for the inner progress ring.
+    ///   - style: The `ProgressRingStyle` used to customize the progress ring.
     ///   - label: A closure which constructs the `Label` for the progress ring.
     ///   - indeterminateView: A closure which constructs a view that is used when progress `isIndeterminate`.
     public init (
         progress: Binding<RingProgress>,
-        axis: RingAxis = ProgressRingDefaults.axis,
-        clockwise: Bool = ProgressRingDefaults.clockwise,
-        innerRingColor: RingColor = ProgressRingDefaults.innerRingColor,
-        outerRingColor: RingColor = ProgressRingDefaults.outerRingColor,
-        innerRingWidth: Double = ProgressRingDefaults.innerRingWidth,
-        outerRingWidth: Double = ProgressRingDefaults.outerRingWidth,
-        innerRingPadding: Double = ProgressRingDefaults.innerRingPadding,
+        axis: RingAxis = .top,
+        clockwise: Bool = true,
+        style: ProgressRingStyle = .init(),
         @ViewBuilder _ label: @escaping (Double) -> Label,
         @ViewBuilder _ indeterminateView: @escaping (Double) -> IndeterminateView
     ) {
         self._progress = progress
         self.axis = axis
         self.clockwise = clockwise
-        self.innerRingWidth = innerRingWidth
-        self.outerRingWidth = outerRingWidth
-        self.innerRingColor = innerRingColor
-        self.outerRingColor = outerRingColor
-        self.innerRingPadding = innerRingPadding
+        self.style = style
         self.indeterminateView = indeterminateView
         self.label = label
     }
-}
-
-// MAR: - Defaults
-
-/// Defaults for the `ProgressRing` initializers.
-public enum ProgressRingDefaults {
-    public static let axis: RingAxis = .top
-    public static let clockwise: Bool = true
-    public static let innerRingColor: RingColor = .color(.blue)
-    public static let outerRingColor: RingColor = .color(.gray)
-    public static let innerRingWidth: Double = 16
-    public static let outerRingWidth: Double = 32
-    public static let innerRingPadding: Double = 16 / 2
 }
 
 // MARK: - Init
@@ -85,32 +56,20 @@ public extension ProgressRing where IndeterminateView == IndeterminateRing {
     ///   - progress: A `Binding` to some `RingProgress` which determines the state of the progress ring.
     ///   - axis: A `RingAxis` which determines the starting axis for which to draw.
     ///   - clockwise: Whether the ring is drawn in a clock wise manner or not.
-    ///   - innerRingColor: The `Color` of the inner progress ring.
-    ///   - outerRingColor: The `Color` of the outer progress ring.
-    ///   - innerRingWidth: The width of the inner progress ring.
-    ///   - outerRingWidth: The width of the outer progress ring.
-    ///   - innerRingPadding: The padding for the inner progress ring.
+    ///   - style: The `ProgressRingStyle` used to customize the progress ring.
     ///   - label: A closure which constructs the `Label` for the progress ring.
     init(
         progress: Binding<RingProgress>,
-        axis: RingAxis = ProgressRingDefaults.axis,
-        clockwise: Bool = ProgressRingDefaults.clockwise,
-        innerRingColor: RingColor = ProgressRingDefaults.innerRingColor,
-        outerRingColor: RingColor = ProgressRingDefaults.outerRingColor,
-        innerRingWidth: Double = ProgressRingDefaults.innerRingWidth,
-        outerRingWidth: Double = ProgressRingDefaults.outerRingWidth,
-        innerRingPadding: Double = ProgressRingDefaults.innerRingPadding,
+        axis: RingAxis = .top,
+        clockwise: Bool = true,
+        style: ProgressRingStyle = .init(),
         @ViewBuilder _ label: @escaping (Double) -> Label
     ) {
         self.init(
             progress: progress,
             axis: axis,
             clockwise: clockwise,
-            innerRingColor: innerRingColor,
-            outerRingColor: outerRingColor,
-            innerRingWidth: innerRingWidth,
-            outerRingWidth: outerRingWidth,
-            innerRingPadding: innerRingPadding,
+            style: style,
             label,
             { IndeterminateRing(percent: $0) }
         )
@@ -126,30 +85,19 @@ public extension ProgressRing where Label == PercentFormattedText, Indeterminate
     ///   - progress: A `Binding` to some `RingProgress` which determines the state of the progress ring.
     ///   - axis: A `RingAxis` which determines the starting axis for which to draw.
     ///   - clockwise: Whether the ring is drawn in a clock wise manner or not.
-    ///   - innerRingColor: The `Color` of the inner progress ring.
-    ///   - outerRingColor: The `Color` of the outer progress ring.
-    ///   - innerRingWidth: The width of the inner progress ring.
-    ///   - outerRingWidth: The width of the outer progress ring.
+    ///   - style: The `ProgressRingStyle` used to customize the progress ring.
     ///   - innerRingPadding: The padding for the inner progress ring.
     init(
         progress: Binding<RingProgress>,
-        axis: RingAxis = ProgressRingDefaults.axis,
-        clockwise: Bool = ProgressRingDefaults.clockwise,
-        innerRingColor: RingColor = ProgressRingDefaults.innerRingColor,
-        outerRingColor: RingColor = ProgressRingDefaults.outerRingColor,
-        innerRingWidth: Double = ProgressRingDefaults.innerRingWidth,
-        outerRingWidth: Double = ProgressRingDefaults.outerRingWidth,
-        innerRingPadding: Double = ProgressRingDefaults.innerRingPadding
+        axis: RingAxis = .top,
+        clockwise: Bool = true,
+        style: ProgressRingStyle = .init()
     ) {
         self.init(
             progress: progress,
             axis: axis,
             clockwise: clockwise,
-            innerRingColor: innerRingColor,
-            outerRingColor: outerRingColor,
-            innerRingWidth: innerRingWidth,
-            outerRingWidth: outerRingWidth,
-            innerRingPadding: innerRingPadding,
+            style: style,
             { PercentFormattedText(percent: $0) },
             { IndeterminateRing(percent: $0) }
         )
@@ -168,16 +116,16 @@ extension ProgressRing: View {
                         percent: 1,
                         axis: axis,
                         clockwise: clockwise,
-                        lineWidth: outerRingWidth,
-                        color: outerRingColor
+                        color: style.outerRingColor,
+                        strokeStyle: style.outerRingStrokeStyle
                     )
 
                     Ring(
                         percent: progress.asDouble ?? 0.0,
                         axis: axis,
                         clockwise: clockwise,
-                        lineWidth: innerRingWidth,
-                        color: innerRingColor
+                        color: style.innerRingColor,
+                        strokeStyle: style.innerRingStrokeStyle
                     )
                     .modifier(
                         AnimatablePercentTextModifier(
@@ -185,7 +133,7 @@ extension ProgressRing: View {
                             label: label
                         )
                     )
-                    .padding(CGFloat(innerRingPadding))
+                    .padding(CGFloat(style.innerRingPadding))
                 }
             }
         }

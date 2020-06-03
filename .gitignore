@@ -134,3 +134,4 @@ iOSInjectionProject/
 .bundle
 .bitrise.secrets.yml
 *.swiftpm/*
+UICircularProgressRing.xcodeproj

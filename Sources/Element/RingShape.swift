@@ -14,12 +14,12 @@ struct RingShape: Shape {
     /// axis in which to start drawing the ring shape
     let axis: RingAxis
 
-    /// the width of the ring shapes line relative to its frame
-    let lineWidth: Double
+    /// how much to inset the shape by
+    let insetAmount: CGFloat
 
     func path(in rect: CGRect) -> Path {
         Circle()
-            .inset(by: lineWidth.float / 2)
+            .inset(by: insetAmount)
             .trim(to: CGFloat(min(percent, 1.0)))
             .rotation(axis.angle)
             .path(in: rect)

@@ -50,7 +50,7 @@ final class ProgressRingSnapshotTests: XCTestCase {
          assertSnapshot(matching: sut, as: .image)
     }
 
-    func test_progressRing_innerRingColor() {
+    func test_progressRing_style_innerRingColor() {
         let colors: [RingColor] = [
             .color(.red),
             .gradient(.init(gradient: .init(colors: [.red, .blue]), center: .center))
@@ -60,7 +60,7 @@ final class ProgressRingSnapshotTests: XCTestCase {
             ForEach(0..<1) { index in
                 ProgressRing(
                     progress: .constant(.percent(0.5)),
-                    innerRingColor: colors[index]
+                    style: .init(innerRingColor: colors[index])
                 )
                 .frame(width: 200, height: 200)
             }
@@ -79,7 +79,7 @@ final class ProgressRingSnapshotTests: XCTestCase {
             ForEach(0..<1) { index in
                 ProgressRing(
                     progress: .constant(.percent(0.5)),
-                    outerRingColor: colors[index]
+                    style: .init(outerRingColor: colors[index])
                 )
                 .frame(width: 200, height: 200)
             }
@@ -88,10 +88,10 @@ final class ProgressRingSnapshotTests: XCTestCase {
         assertSnapshot(matching: sut, as: .image)
     }
 
-    func test_progressRing_innerRingWidth() {
+    func test_progressRing_style_innerRing_StrokeStyleLineWidth() {
         let sut = ProgressRing(
             progress: .constant(.percent(0.5)),
-            innerRingWidth: 30
+            style: .init(innerRingStrokeStyle: .init(lineWidth: 20))
         )
         .frame(width: 200, height: 200)
 
@@ -101,7 +101,7 @@ final class ProgressRingSnapshotTests: XCTestCase {
     func test_progressRing_outerRingWidth() {
         let sut = ProgressRing(
             progress: .constant(.percent(0.5)),
-            outerRingWidth: 30
+            style: .init(outerRingStrokeStyle: .init(lineWidth: 32))
         )
         .frame(width: 200, height: 200)
 
@@ -111,7 +111,7 @@ final class ProgressRingSnapshotTests: XCTestCase {
     func test_progressRing_innerRingPadding() {
         let sut = ProgressRing(
             progress: .constant(.percent(0.5)),
-            innerRingPadding: 0
+            style: .init(innerRingPadding: 0)
         )
         .frame(width: 200, height: 200)
 
