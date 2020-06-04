@@ -398,12 +398,29 @@ class UICircularRingLayer: CAShapeLayer {
     }
     
     func drawImage() {
-        guard ring.shouldShowImage else { return }
+        guard ring.shouldShowImage && image != nil else { return }
+        
+        let offset = calculateOuterRingOffset()
+        let innerRadius = calculateInnerRadius()
+        let imageHeight = (innerRadius - offset) * CGFloat((2.0).squareRoot())
+        
+        //make the image square
+        var side = ring.frame.size.width / 2
+        if ring.frame.size.height > ring.frame.size.width {
+            side = ring.frame.size.height/2
+        }
+        
+        let imageOffset = (side + offset) * CGFloat((2.0).squareRoot()) - (innerRadius + ring.outerRingWidth) - 1
+        let rect = CGRect(x: imageOffset, y: imageOffset, width: imageHeight, height: imageHeight)
         
         insideImageView.image = image
         ring.willDisplayImage(imageView: insideImageView)
+        insideImageView.contentMode = .scaleToFill
+        
         insideImageView.sizeToFit()
         insideImageView.center = CGPoint(x: bounds.midX, y: bounds.midY)
+
+        image.draw(in: rect)
     }
 
     /**
@@ -424,7 +441,10 @@ class UICircularRingLayer: CAShapeLayer {
 
         // Deterime what should be the center for the label
         valueLabel.center = CGPoint(x: bounds.maxX, y: bounds.maxY)
-
-        valueLabel.drawText(in: bounds)
+        
+        let radius = calculateInnerRadius()
+        let rect = CGRect(x: 0, y: radius - ring.innerRingWidth / 2, width: 100, height: 100)
+        
+        valueLabel.drawText(in: rect)
     }
 }
