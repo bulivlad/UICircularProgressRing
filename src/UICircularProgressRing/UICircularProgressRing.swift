@@ -271,4 +271,9 @@ final public class UICircularProgressRing: UICircularRing {
         super.willDisplayLabel(label: label)
         delegate?.willDisplayLabel(for: self, label)
     }
+    
+    override func willDisplayImage(imageView: UIImageView) {
+        super.willDisplayImage(imageView: imageView)
+        delegate?.willDisplayImage(for: self, imageView)
+    }
 }

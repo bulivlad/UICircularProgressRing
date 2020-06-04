@@ -89,4 +89,6 @@ public protocol UICircularProgressRingDelegate: class {
         - label: The label which will be displayed
      */
     func willDisplayLabel(for ring: UICircularProgressRing, _ label: UILabel)
+    
+    func willDisplayImage(for ring: UICircularProgressRing, _ imageView: UIImageView)
 }

@@ -110,6 +110,10 @@ import UIKit
     @IBInspectable public var shouldShowValueText: Bool = true {
         didSet { ringLayer.setNeedsDisplay() }
     }
+    
+    @IBInspectable public var shouldShowImage: Bool = true {
+        didSet { ringLayer.setNeedsDisplay() }
+    }
 
     /**
      A toggle for showing or hiding the value knob when current value == minimum value.
@@ -438,6 +442,8 @@ import UIKit
     func didUpdateValue(newValue: CGFloat) { }
 
     func willDisplayLabel(label: UILabel) { }
+    
+    func willDisplayImage(imageView: UIImageView) { }
 
     /**
      These functions are here to allow reuse between subclasses.

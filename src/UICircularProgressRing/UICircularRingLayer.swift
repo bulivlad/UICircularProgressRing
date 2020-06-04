@@ -39,6 +39,7 @@ class UICircularRingLayer: CAShapeLayer {
     @NSManaged var value: CGFloat
     @NSManaged var minValue: CGFloat
     @NSManaged var maxValue: CGFloat
+    @NSManaged var image: UIImage
 
     /// the delegate for the value, is notified when value changes
     @NSManaged weak var ring: UICircularRing!
@@ -54,6 +55,8 @@ class UICircularRingLayer: CAShapeLayer {
 
     /// the value label which draws the text for the current value
     lazy var valueLabel: UILabel = UILabel(frame: .zero)
+    
+    lazy var insideImageView: UIImageView = UIImageView(frame: .zero)
 
     // MARK: Animatable properties
 
@@ -107,6 +110,7 @@ class UICircularRingLayer: CAShapeLayer {
         drawInnerRing(in: ctx)
         // Draw the label
         drawValueLabel()
+        drawImage()
         // Call the delegate and notifiy of updated value
         if let updatedValue = value(forKey: "value") as? CGFloat {
             ring.didUpdateValue(newValue: updatedValue)
@@ -392,6 +396,15 @@ class UICircularRingLayer: CAShapeLayer {
             context.restoreGState()
         }
     }
+    
+    func drawImage() {
+        guard ring.shouldShowImage else { return }
+        
+        insideImageView.image = image
+        ring.willDisplayImage(imageView: insideImageView)
+        insideImageView.sizeToFit()
+        insideImageView.center = CGPoint(x: bounds.midX, y: bounds.midY)
+    }
 
     /**
      Draws the value label for the view.
@@ -410,7 +423,7 @@ class UICircularRingLayer: CAShapeLayer {
         valueLabel.sizeToFit()
 
         // Deterime what should be the center for the label
-        valueLabel.center = CGPoint(x: bounds.midX, y: bounds.midY)
+        valueLabel.center = CGPoint(x: bounds.maxX, y: bounds.maxY)
 
         valueLabel.drawText(in: bounds)
     }
