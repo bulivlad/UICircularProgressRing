@@ -170,7 +170,7 @@ class UICircularRingLayer: CAShapeLayer {
                                      radius: outerRadius,
                                      startAngle: start,
                                      endAngle: end,
-                                     clockwise: true)
+                                     clockwise: ring.isClockwise)
         outerPath.lineWidth = ring.outerRingWidth
         outerPath.lineCapStyle = ring.outerCapStyle
 

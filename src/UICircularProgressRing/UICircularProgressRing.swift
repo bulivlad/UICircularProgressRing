@@ -80,6 +80,12 @@ final public class UICircularProgressRing: UICircularRing {
             }
         }
     }
+    
+    public var image: UIImage = UIImage() {
+        didSet{
+            ringLayer.image = image
+        }
+    }
 
     /**
      The current value of the progress ring
